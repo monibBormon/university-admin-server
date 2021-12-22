@@ -21,7 +21,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect()
-        const universityCollection = client.db('universitydb').collection('courses')
+        const courseCollection = client.db('universitydb').collection('courses')
         const usersCollection = client.db('universitydb').collection('users')
 
         // get all products from db
@@ -29,9 +29,9 @@ async function run() {
             const result = await carCollection.find().toArray()
             res.json(result)
         })
-        //add a new product to db
-        app.post('/products', async (req, res) => {
-            const result = await carCollection.insertOne(req.body)
+        //add a new course to db
+        app.post('/courses', async (req, res) => {
+            const result = await courseCollection.insertOne(req.body)
             res.json(result)
         })
         // delete product from db
