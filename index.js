@@ -24,9 +24,9 @@ async function run() {
         const courseCollection = client.db('universitydb').collection('courses')
         const usersCollection = client.db('universitydb').collection('users')
 
-        // get all products from db
-        app.get('/products', async (req, res) => {
-            const result = await carCollection.find().toArray()
+        // get all courses from db
+        app.get('/courses', async (req, res) => {
+            const result = await courseCollection.find().toArray()
             res.json(result)
         })
         //add a new course to db
@@ -34,9 +34,14 @@ async function run() {
             const result = await courseCollection.insertOne(req.body)
             res.json(result)
         })
+        // get single student details 
+        app.get('/course-details/:id', async (req, res) => {
+            const result = await courseCollection.findOne({ _id: ObjectId(req.params.id) })
+            res.json(result)
+        })
         // delete product from db
         app.delete('/delete/:id', async (req, res) => {
-            const result = await carCollection.deleteOne({ _id: ObjectId(req.params.id) })
+            const result = await courseCollection.deleteOne({ _id: ObjectId(req.params.id) })
             res.json(result)
         })
 
