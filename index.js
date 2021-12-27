@@ -26,8 +26,20 @@ async function run() {
 
         // get all courses from db
         app.get('/courses', async (req, res) => {
-            const result = await courseCollection.find().toArray()
-            res.json(result)
+            const cursor = courseCollection.find({})
+            const page = req.query.page;
+            const size = parseInt(req.query.size);
+            let result;
+            const count = await cursor.count()
+            if (page) {
+                result = await cursor.skip(page * size).limit(size).toArray()
+            } else {
+                result = await cursor.toArray()
+            }
+            res.send({
+                count,
+                result
+            })
         })
         //add a new course to db
         app.post('/courses', async (req, res) => {
