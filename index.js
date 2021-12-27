@@ -44,7 +44,6 @@ async function run() {
         })
         //add a new course to db
         app.post('/courses', async (req, res) => {
-            console.log(req.body)
             const name = req.body.name;
             const title = req.body.title;
             const price = req.body.price;
