@@ -3,6 +3,7 @@ const { MongoClient } = require('mongodb');
 const cors = require('cors')
 const ObjectId = require('mongodb').ObjectId
 require('dotenv').config()
+const fileUpload = require('express-fileupload')
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -10,7 +11,7 @@ const port = process.env.PORT || 5000
 // middleware
 app.use(cors())
 app.use(express.json())
-
+app.use(fileUpload())
 
 // database 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.dejzn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -43,7 +44,23 @@ async function run() {
         })
         //add a new course to db
         app.post('/courses', async (req, res) => {
-            const result = await courseCollection.insertOne(req.body)
+            console.log(req.body)
+            const name = req.body.name;
+            const title = req.body.title;
+            const price = req.body.price;
+            const des = req.body.body;
+            const image = req.files.image;
+            const imageData = image.data;
+            const encodedImage = imageData.toString('base64')
+            const imageBuffer = Buffer.from(encodedImage, 'base64')
+            const course = {
+                name,
+                title,
+                price,
+                body: des,
+                img: imageBuffer
+            }
+            const result = await courseCollection.insertOne(course)
             res.json(result)
         })
         // get single student details 
